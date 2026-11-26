@@ -81,3 +81,13 @@ uv run --locked scons manuscript FIGURES=redrawn
 ```
 
 The last command uses regenerated PNGs rather than archived publication figures. The synthetic-control redraw retains the historical donor selection (including states with any zero policy indicator), and the incarceration redraw uses nonnegative least squares without an intercept, rather than imposing a sum-to-one constraint. Historical missing outcome zeros are used in the synthetic-control figure script. These choices are retained for replication, not presented as improved identification. Table 1 remains the printed manuscript table. The redraw target also exports unstarred reconstructed Table 1 statistics and differences; their numerical correspondence has not been verified. The original Table 1 magnitude-based stars do not represent statistical tests (see replication notes).
+
+## Numerical validation against an authorized reference archive
+
+After preparation, if you have access to the original archived intermediate CSVs, run:
+
+```sh
+uv run --locked python source/verify_inputs.py data /path/to/archive/data arrest_rates.csv incarceration_counts.csv corrections_spending.csv
+```
+
+The checker compares schemas, row counts, duplicate-preserving sorted rows and numeric values within a stated tolerance. It fails on discrepancies or missing files. Sorting by all columns may make near-tied numeric rows compare out of order; inspect such failures individually. No archived input data are included or requested by this checker. This comparison is not a substitute for validating the final regression estimates or figure outputs.
