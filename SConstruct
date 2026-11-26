@@ -69,3 +69,16 @@ manuscript = env.Command(
     '"$PYTHON" "${SOURCES[0]}" "${SOURCES[1]}" "${SOURCES[2]}" "${SOURCES[3]}" "${SOURCES[4]}" "${SOURCES[5]}" "$TARGET" ${SOURCES[6:]}',
 )
 Alias("manuscript", manuscript)
+
+
+# Explicit upstream preparation; enabled only for the prepare-data invocation
+# so existing archived-input workflows remain usable.
+if "prepare-data" in COMMAND_LINE_TARGETS:
+    prep = env.Command(
+        ["data/arrest_rates.csv", "data/incarceration_counts.csv", "data/corrections_spending.csv"],
+        ["source/derived/prepare_inputs.py", "uv.lock",
+         *[f"data/raw/{i}-0001-Data.dta" for i in (23339,23341,23343,23345,23347,23361,23362,23363,23364,23365,23366)],
+         "data/raw/38048-0003-Data.dta", "data/raw/State-Exp-Report-Data.xlsm"],
+        '"$PYTHON" "${SOURCES[0]}" data/raw data',
+    )
+    Alias("prepare-data", prep)
