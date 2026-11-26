@@ -2,7 +2,7 @@
 
 This public code-only snapshot preserves the archived analysis and processing code without importing private Git history or unverified data. The inventory below records the archived Git blob hashes and correspondence at the time of comparison. Git blob hashes are not ordinary file SHA-1 checksums. For the LFS panel archive, the hash identifies the pointer, not the underlying data.
 
-Public adaptations retain the manuscript DOI and data access instructions while omitting manuscript-only build targets. Excluded assets are not represented as publicly downloadable. See [data availability](../DATA_AVAILABILITY.md) and [replication notes](replication-notes.md). A complete fresh-checkout build has not been verified without the archived inputs.
+Public adaptations retain the manuscript DOI and data access instructions. Manuscript build targets and source have been restored; figures and datasets remain separate. Excluded assets are not represented as publicly downloadable. See [data availability](../DATA_AVAILABILITY.md) and [replication notes](replication-notes.md). A complete fresh-checkout build has not been verified without the archived inputs.
 
 | Archived path | Git blob SHA | Public status |
 | --- | --- | --- |
@@ -11,7 +11,7 @@ Public adaptations retain the manuscript DOI and data access instructions while 
 | `CITATION.cff` | `ad33f0301809d9a969f07009f6b9c41a1e172647` | Public adaptation |
 | `CONTRIBUTING.md` | `f769668f853a067c1651ce3107370d9a7763f926` | Archive-only support file |
 | `README.md` | `8a113bb2e12c94eec801ce17d2bdfb552419b4cc` | Public adaptation |
-| `SConstruct` | `fdc4677a5e937f0f36f6d2b2efa03eba80419347` | Public adaptation |
+| `SConstruct` | `fdc4677a5e937f0f36f6d2b2efa03eba80419347` | Identical |
 | `data/State-Exp-Report-Data.xlsm` | `cc8e2e768db510e5a75b96511893068a16d1cb2c` | Excluded asset |
 | `data/States_3_Strikes.xlsx` | `3243d188dfd1070eb728fd27e58c67f0bf84f523` | Excluded asset |
 | `data/States_3_Strikes_Full_Filled.csv` | `90fa108402c772d909e6f677d16a7b4a5f7d71ba` | Excluded asset |
@@ -31,9 +31,9 @@ Public adaptations retain the manuscript DOI and data access instructions while 
 | `source/analysis/incarceration_ols.R` | `d0bdffaa195a3bc525952bb73afe91ee72edc47b` | Identical |
 | `source/analysis/spending_did.py` | `e734d8bb5a3bce246260ab05d5ec9e1ca9b6d9c9` | Identical |
 | `source/derived/state_year_panel.py` | `e2ebdc88577d8098271aaea4cca2376ee1bc40c6` | Identical |
-| `source/manuscript/Bibliography.bib` | `c4abf409ee12e685ca1d7bbf0cb1609691427635` | Excluded manuscript component |
-| `source/manuscript/build.py` | `b04bc736b51962d0c9e4f3158702661efcddccf2` | Excluded manuscript component |
-| `source/manuscript/main.tex` | `8a906a758da4315af3fff8c8cf3fc5a018dc75d5` | Excluded manuscript component |
+| `source/manuscript/Bibliography.bib` | `c4abf409ee12e685ca1d7bbf0cb1609691427635` | Restored manuscript component |
+| `source/manuscript/build.py` | `b04bc736b51962d0c9e4f3158702661efcddccf2` | Restored manuscript component |
+| `source/manuscript/main.tex` | `8a906a758da4315af3fff8c8cf3fc5a018dc75d5` | Public adaptation (contact email omitted) |
 | `source/report/paper_table.py` | `55799b57dd03e2b7114711528d4bb0dd2cf0ca80` | Identical |
 | `source/report/regression_tables.py` | `8341f67d709c59be82e0cb62b4c419ffcd8a213f` | Identical |
 | `uv.lock` | `54fd0cadec1d9b4b94fbe265396350502ecbb042` | Identical |

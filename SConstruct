@@ -51,3 +51,21 @@ paper = env.Command(
     '"$PYTHON" "${SOURCES[0]}" "${SOURCES[1]}" "${SOURCES[2]}" "${SOURCES[3]}" "$TARGET"',
 )
 Default(paper, panel)
+
+manuscript_figures = [
+    f"data/published-figures/{name}.png"
+    for name in (
+        "TotalCorrSpend", "corrections", "Incarcerated",
+        "TreatIncarcerated", "ArrestsCAvsSynth", "Placebo",
+    )
+]
+manuscript = env.Command(
+    "output/california_1994_law_manuscript.pdf",
+    [
+        "source/manuscript/build.py", "source/manuscript/main.tex",
+        "source/manuscript/Bibliography.bib",
+        incarceration_did, spending_did, arrests_did, *manuscript_figures,
+    ],
+    '"$PYTHON" "${SOURCES[0]}" "${SOURCES[1]}" "${SOURCES[2]}" "${SOURCES[3]}" "${SOURCES[4]}" "${SOURCES[5]}" "$TARGET" ${SOURCES[6:]}',
+)
+Alias("manuscript", manuscript)

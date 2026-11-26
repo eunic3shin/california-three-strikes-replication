@@ -1,0 +1,311 @@
+\documentclass[12pt]{article}
+
+% Font and spacing
+\usepackage{times} % Times New Roman; use \usepackage{helvet} for Arial alternative
+\usepackage{setspace}
+\doublespacing
+
+% Page size and margins
+\usepackage[margin=1in]{geometry}
+
+% Header/footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\thepage}
+
+% Lists
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=*}
+
+% Math and symbols
+\usepackage{amsmath,amssymb}
+
+% Figures and tables
+\usepackage{graphicx}
+\usepackage{float}
+\restylefloat{table}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{makecell}     % for multi-line table cells
+\usepackage{pdflscape}    % for landscape tables/figures
+
+% Citations and bibliography
+\usepackage[style=chicago-authordate,backend=biber]{biblatex}
+\addbibresource{Bibliography.bib}
+
+% Hyperlinks
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Pointing to the Price of Punishment: California's Three Strikes Law on Incarceration Outcomes}
+
+\author{
+Eunice Shin \\
+University of California, Berkeley \\
+
+}
+
+\begin{document}
+
+\maketitle
+
+\thispagestyle{empty}
+
+\maketitle
+
+\thispagestyle{empty}
+
+\begin{abstract}
+\noindent This paper looks at the effect of California’s Three Strikes Law, passed in 1994, on arrest rate, total population incarcerated, and amount of corrections spending in California through a synthetic control model and difference in differences methods. The results indicate that although arrest rates decreased slightly, the total incarcerated population and state spending on corrections increased significantly. Though the Diff in Diff regression estimates point to robust R-squared values, causal identification is challenged by poor donor fits in placebo tests for the robustness of my synthetic control methods. The results suggest that the law contributed to large costs over time.
+
+\end{abstract}
+
+\pagenumbering{arabic}
+
+\newpage
+
+
+\section{Introduction}
+    In 1994, a Three-Strikes-You're-Out law was passed in the movement of California's ``Tough on Crime" mindset. Incarceration rates rose quickly and state spending increased dramatically, causing overcrowding and poor conditions in prisons. In the years following the 1994 law, many people began advocating for the reduction of overcrowding through lawsuits until a federal panel was appointed and ruled, with backing from the Supreme Court, that the state reduce the number of people in prisons. California then passed laws in 2009, 2011, 2012, 2014, and 2016 to reduce the prison population below the federally mandated level \parencite{PPIC_CriminalJusticeShifts}. It took several years and bills to undo the impacts of one law. Thus began this project to see the effects of a state government's investments in Corrections programs. In this paper, I will explore whether the first few years of the implementation of the law indicated anything about the problems that were yet to come. Existing literature tends to point to the outcomes that the three strikes law caused in the several years following, but not how the law affected outcomes in the first few years. I will look at the economics behind the 1994 law's effects, through corrections spending instead of only arrest rates and prison populations. Additionally, I look at how spending per inmate has changed over time as the budget increased.
+    
+    Specifically, how did California's Three-Strikes-You're-Out Law, implemented in 1994, affect incarceration outcomes between 1990 to 1999?
+
+    I use data that is easy to download and publicly accessible through the Inter-university Consortium for Political and Social Research (ICPSR) and the National Association of State Budget Officers (NASBO) website in order to run a difference-in-differences model with synthetic controls and see the outcomes of California's law compared to its counterfactual created through the R program. The code I used ``trains" its knowledge from state data from 1991 to 1994 before treatment, then ``predicts" the outcome had the law never been passed in California from 1994 to 1999.
+    
+    The results show that California's arrest rate decreased at a modest magnitude, mean incarcerated population increased at a huge magnitude, mean corrections spending per capita increased at a great magnitude, and mean spending per inmate decreased at a slight magnitude due to the 1994 law compared to the synthetic control's outcomes between 1994-1999. The law may have acted as a mechanism to imprison people en-masse while increasing spending and putting people in worse conditions of confinement in order to please the general public and constituents. The results imply that spending on Corrections began increasing greatly in 1994, perhaps to prove to Californians that their tax dollars were going somewhere ``useful." 
+
+    In the following pages, I will present an institutional background that outlines the context of the law, a literature review that analyzes the existing discussion around the law, examine the data sets used to support my approach, the empirical regressions and mathematical formulas used to consider the outcomes, the results from the code, and the conclusion of what the data indicates. 
+    
+\section{Institutional Background}
+
+  How did California’s Three Strikes Law, passed in 1994, affect the makeup of arrests and corrections spending in California? The three strikes law was enacted with the intent to prevent crimes from repeat offenders by increasing jail sentences for each subsequent crime one committed, with a minimum sentence of 25 years to life being imposed by the third crime. What can this data tell us about policing in the United States, and how those in the system often remain in the system? I posit that the three strikes law affected the makeup of arrests by increasing the amount of people arrested overall in California, and was ineffective at preventing future crime compared to other, more humane, measures such as rehabilitation, hospitalization for the mentally ill, housing for the homeless, and decriminalization of drugs to allow for people to safely become sober.
+
+
+\section{Literature Review}
+   To begin, existing research suggests that police officers are incentivized by more than just “fighting crime” \parencite{baicker2007finders}. But it’s rather the way that the law enforcement hierarchy system was built that even people without any racial bias end up most active in communities that are over-policed in order to meet quotas and “do their job.” For example, police officers “are more likely to successfully generate revenue by patrolling a low-income area-- where a resident may not have had the funds to fix a recently broken taillight or pay for insurance, than they would ticketing a well-to-do white businessman who has his lawyer on speed-dial and would cost the city money by fighting a citation in court. As a result, police are incentivized to target low-income areas” \parencite{hogan2023incentivizing}. 
+
+    A good perspective about potential causes of incarceration comes from a paper about Incarceration in the US– “The best single proximate explanation of the rise in incarceration is not rising crime rates, but the policy choices made by legislators to greatly increase the use of imprisonment as a response to crime… The unprecedented rise in incarceration rates can be attributed to an increasingly punitive political climate surrounding criminal justice policy formed in a period of rising crime and rapid social change. This provided the context for a series of policy choices —across all branches and levels of government—that significantly increased sentence lengths, required prison time for minor offenses, and intensified punishment for drug crimes” \parencite{travis2014growth}.
+
+    A working paper by Radha Iyengar explores the unintended consequences of the Three Strikes Law, and mainly finds that it indeed reduced criminal activity in potential second- and third- strike offenders, but had the unintended consequences of seeing criminals more likely to commit more violent crimes. It also saw that criminals eligible for second- and third-strikes were found to move to and commit crimes in neighboring states instead. It concluded that “The high cost of incarceration combined with the high cost of violent crime relative to non-violent crime implies that Three Strikes may not be a cost-effective means of reducing crime”\parencite{iyengar2008threestrikes}.
+
+    Literature by \cite{chen3strikes} suggests that the “toughest” sentencing policy is not necessarily the most effective option.
+
+    Although there is quite a lot of literature available on the unfairness of the US prison-industrial complex, I think it’s imperative to go backwards to look at the data that shaped and reinforced long-standing stereotypes about different racial groups. Not only that, but to encourage media literacy in all generations to think critically about the information we consume and question the foundations of our own thoughts. These data sets contain information that should be analyzed from the lens of people who can approach the ideas with knowledge about the history of the police force in America, the systemic incentives that police officers face to continue to over-police already exploited communities, and the unspoken costs of imprisonment on vulnerable communities. 
+
+    Information released by the \cite{justicemapping2009} taken from New York State’s DOCCS Prison Admissions Data from 2009 shows the amount that the State of New York spends on corrections on certain blocks in Brooklyn, and it totals up to millions of dollars per block per year. Data from the Prison Policy \cite{prisonpolicywages}, which gives information about the imprisonment rate for 100,000 by Zip Code in 2020, is very interesting because it shows how certain zip codes are more likely to have higher imprisonment rates. \cite{csr_mdb} also has a wonderful and informative project about how over-policing of specific neighborhoods leads to states spending millions of dollars a year to continue incarcerating the residents of single city blocks. State governments spend money continuously keeping people incarcerated rather than investing this money into communities for things like community building, food security, rent subsidies, childcare, increasing job security, and more. 
+
+    I will expand the work of the Justice Mapping Program through looking at the cost of incarceration in California. My findings address gaps in existing literature because most synthetic control research examines the counterfactual of arrest rates and incarceration outcomes. However, I am exploring the economic cost of mass incarceration policy by looking at the divergence in what California has spent on corrections, compared to similar states that didn’t implement a 3 Strikes law.
+
+\section{Data}
+    The approach I take to answering this question is through multiple data sets. All of this data is available and freely accessible to the general public through ICPSR and NASBO. A caveat to my research is that it only explores data between 1991-1999, as the overlap that I was able to find between data on arrests, state expenditures, and incarcerated numbers was limited. I drop observations that I don’t need by clearly defining sample restrictions, loading my data in piece by piece and cleaning them, and merging all the data sets. I create a distribution of my data in order to check my outliers to see whether they are real or not, commenting on my code continuously to keep track of what I’m working on, allowing code to be readable with spaces and indents, and utilizing programs and loops to make things easier overall.
+    
+\subsection{ICPSR Arrests Summarized Yearly}
+    The first major data set is from the \cite{icpsr_ucr_arrests}. I download the data as individual files for each year from 1989 to 1999. These data sets go down to the number of arrests for certain crimes in each state, and also contains information on demographics such as the race, gender, and age group of arrests per crime. I calculate the arrest rate per state per offense and normalize this by 100,000 people. My reasoning behind this is that perhaps as the Three Strikes Law was passed, perhaps total arrests increased as police officers were basically given a “green light” to freely arrest people under the guise of preventing future crime. Perhaps we will also see a deterrence effect of certain repeat crimes. A limitation of this data is that it shows the number of arrests per demographic group, and therefore has the potential to double count people. For example, one person can be counted twice in “total arrests” if they are an Adult in any demographic group, and an Adult in any age group. While cleaning the data, I made sure not to double count by race and age across rows. Also, since the original data set contains a column called “Indian,” it is difficult to distinguish between whether the original surveyors meant “Native American,” “Hispanic,” or “Latino.” Since most of the data set is missing information on the “Ethnic Origin” variable (Hispanic or Non-Hispanic), the data likely uses the one outdated term to describe multiple races, regardless of ethnic origin or nationality.
+
+\subsection{NASBO State Expenditure Reports}
+    I measure the total amount that each state has spent on Corrections Spending through data from State Expenditure Reports between 1991-2024, available through the \cite{nasbo2024} (NASBO) website. One must create a free account to download the historical data set. It includes information on expenditure by state in elementary and secondary education, higher education, public assistance including Temporary Assistance for Needy Families and other cash assistance, Medicaid, corrections, and transportation. The key states that “For corrections, states were asked to include, where applicable, expenditures for capital construction, aid to local governments for jails, parole programs, prison industries, community corrections, drug abuse rehabilitation programs, as well as expenditures made for juvenile correction programs.” The unit of observation is one state in one year, and contains information on expenditures. However, some limitations of this data is that it is self-reported by state. Another limitation is that it only contains information from 1991 forward. Though data reaching back to 1985 exists on the NASBO website, it is located in individual scanned files, and contains little relevant information to this paper.
+
+\subsection{ICPSR Total Incarcerated per State}
+    The total number of people incarcerated per state per year comes from ICPSR through the \cite{icpsr_ncrp}. A limitation of this data is that “In some state's DOCs, inmates are asked to self-identify race and ethnicity at time of admission, while other states rely on information in the arrest or court documents accompanying the prisoner at admission, and in others prison officials classify the inmates visually upon entrance to the facility.” In other words, the way that data by race is collected differs across institution. 
+
+\subsection{LegalMatch 3 Strikes States}
+    There are quite a few other states that passed similar laws. For example, Texas has had similar laws since 1952. California happens to be the strictest, with its possibility for a life sentence for the third strike. I use freely available online resources to document and hand-code which states enacted 3 Strikes Laws \parencite{legalmatch_threestrikes}. Although California has the most severe 3 Strikes Law, it is useful to identify how potential outcomes have been influenced by the legislature. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\paperwidth]{TotalCorrSpend.png}
+\caption{California's Total Corrections Spending (1985–2024)}
+\label{fig:total-corrections-spending}
+\vspace{0.5ex}
+\small
+\textit{Notes}: Based on data from the National Association of State Budget Officers’ \textit{State Expenditure Reports}, 1991–2024. Overview of CA spending on Corrections in billions of dollars. 
+\end{figure}
+
+\subsection{Diff-in-Diff Regression}
+    I estimate a simple differences-in-differences model of the form 
+\begin{align*}
+\text{Outcome}_{it} = \beta_0 + \beta_1 \cdot \text{Treatment}_i + \beta_2 \cdot \text{Post}_t + \beta_3 \cdot (\text{Treatment}_i \times \text{Post}_t) + \varepsilon_{it}
+\end{align*}
+
+    In the regression formula, $\beta_0$ represents the constant, which is the baseline average of the control group before treatment. Treatment is a dummy variable that reflects whether a group is the treatment or control, so that $\beta_1$ stands for the difference between the treatment and control groups pre-intervention. $\beta_0 + \beta_1$ gives us the average outcome of the treatment group in the pre intervention period. $\beta_2$ is the indicator for the time period. When Post = 1, it is the post intervention period and $\beta_2$ illustrates how much the average outcome of the control group has changed post-treatment. It also denotes the gains that occur over time independent of treatment. $\beta_0 + \beta_2$ is the average outcome of the control group post-treatment. $\beta_3$ is the difference in changes over time, and is our key parameter in estimating "how much the average outcome of the treatment group has changed in the period after the treatment, compared to what it would happened to the same group had the intervention not occurred" \parencite{ds4ps_diffindiff}.
+    
+    The four outcomes we will look at are the number of arrests, amount of corrections spending, total number of people incarcerated, and the number of crimes that were reported. The treatment for all of these outcomes will be the 1994 law, and the Post dummy variable will model the results before and after the law took effect. 
+
+    Our $\beta_3$ gives us the casual effect of the law through a key assumption. The parallel trends assumption states that the two trends we are comparing follow similar patterns before the treatment, thus giving us parallel lines on a graph. In the absence of treatment, both trends would have continued following similar patterns. With this, the assumption that the only systematic difference between the control and treated groups is the treatment must hold. However, we create the group where Treatment =0 through Synthetic Controls, since the counterfactual is unobserved. Plus, since we have aggregated level data, Diff-in-Diff estimates won’t allow us to do inference. So what’s the next best thing? Combining the information we do know about different states to measure what could’ve been in California.
+
+\subsection{Synthetic Control}
+\text{We want to estimate the following.}
+\begin{align*}
+\tau_{1t} = Y^{I}_{1t} - Y^{N}_{1t}
+\end{align*}
+\noindent
+$\tau_{1t}$ is the treatment effect, where $Y^{I}_{1t}$ is the actual outcome for the treated unit (California), and $Y^{N}_{1t}$ is the estimated counterfactual.
+\vspace{1em}
+
+To estimate $Y^{N}_{1t}$, we take a weighted average of the units in the donor pool, which is a collection of untreated units that excludes the state of California.
+
+\begin{align*}
+\hat{Y}^{N}_{1t} = \sum_{j=2}^{J+1} w_j Y_{jt}
+\end{align*}
+
+    I utilize the approach detailed by \cite{facure2025} on Synthetic Control methods in Causal Inference for the Brave and True. Since synthetic controls can be viewed as a linear regression through visualizing it as a matrix where the units become variables and the outcome is a weighted average of the units, we can estimate the weights of different states with Ordinary Least Squares. We minimize “the square distance between the weighted average of the units in the donor pool and the treated unit for the pre-intervention period” \parencite{facure2025}.
+
+    We begin by building a synthetic control in the pre intervention period and pivoting the table to have one column per state per year (making it “Long” data) and then run a regression with y as the state of California, and X as all the other states in our donor pool. 
+
+    We restrict the weights to be positive and to sum to one in order to avoid extrapolation and instead create a convex combination of the units in the donor pool. This constraint also helps prevent overfitting the data. Specifically, we choose weights $\mathbf{W} = (w_2, \ldots, w_{J+1})$ that minimize the following:
+
+
+\begin{equation*}
+\left\| \mathbf{X}_1 - \mathbf{X}_0 \mathbf{W} \right\| = 
+\left( \sum_{h=1}^{k} v_h \left( X_{h1} - \sum_{j=2}^{J+1} w_j X_{hj} \right)^2 \right)^{\frac{1}{2}}
+\end{equation*}
+
+    We are left with an array of numbers that are the weights we can use to build the synthetic control. By multiplying the outcome of each state with its corresponding weight with a dot product, we can plot the outcome variable with the state of California. 
+
+    I use all of this information to create a synthetic control in R with the Synth library. Using the cleaned NASBO data, I filter all relevant years (between 1991 to 1999) to create a post-treatment dummy. Then, I filter out the states that have the dummy Three Strikes Law = 0 to create “donor states” to train the data. I make sure to remove California from this pool. I prep the data by using a predictor for Total Spending on Capital and Non-Capital Expenditures, and special predictors for the mean of Total Corrections Spending between 1991 to 1993, the pre-treatment years, in order to use lagged outcomes for predictors. This creates a tighter synthetic pre-match to the existing California data. I optimize the time variable “YEAR” between 1991 to 1993, then plot all the data from 1991 to 1999. The dependent variable in this case is the total amount spent by the state of California each year on Corrections alone, in millions of dollars. I then use these weights to multiply to the matrices of states and create a plot of spending on Corrections in California and Synthetic California before, through, and after 1994. I use this same method to find the synthetic control values of arrest rates, incarcerated populations, and spending per inmate.
+
+    After all the synthetic control graphs, I create placebo effects in order to see what we would observe without a treatment, and compare to see if the treatment effect was statistically significant. It creates a graph of several synthetic lines in order to see how extreme of a value is the effect of the Three Strikes Law in California. We then derive a P-value from these results. This helps us to confirm if the non-placebo estimate is above the 95\% of the placebo distribution, thereby showing the significance of our estimate. Now our assumptions for causal inference are satisfied.
+
+     Some pitfalls of my regression analysis is that the regression on arrests is based on the arrest rate per 100,000 people, which may not give us a good insight into the true Diff-in-diff effect of the law on arrests. But it gives us a good look into the arrest rate accounting for population growth over the years by normalizing the numbers. Another pitfall is that the total corrections spending may span from 1991-2024, and not completely capture the spending between 1991-1999 where the other two equations look. I’m also not quite sure whether the NASBO data on spending accounts for inflation. There may also be other events that indirectly affect California’s crime rate, such as the “spillover” of crimes from neighboring states due to more three strikes laws. However, California has the strictest law with a guaranteed sentence of 25 to life on the third strike, so it’s more likely that potential repeat offenders left the state once the law went into effect. Lastly, the NASBO data only reaches back to 1991.
+     
+\section{Results}
+    Table 1 indicates that the mean arrest rate per 100,000 people slightly decreased in the California outcome due to the 1994 law, but actually increased in the Synthetic Control. This suggests that the law may have coincided with a decrease in arrests, or caused this decrease. In both groups, the mean incarcerated population also increased, but California increased at a greater rate than the synthetic control post-treatment. This suggests that the law may have coincided with an increase in arrests, but the significance of the difference in differences suggests that it is significant at the 0.01 level and the increase in the incarcerated population is perhaps a consequence of the law. The mean corrections spending in millions of dollars increased in both cases, but the spending in California significantly increased at a greater rate than the synthetic control. The mean spending per inmate decreased slightly in California, but increased slightly in the synthetic control. The change in the arrest rate per 100,000 people is significant but still quite small. It's difficult to determine whether the size of this effect justifies the cost of spending on Corrections. 
+    
+    All in all, the results suggest that California's arrest rate decreased at a modest magnitude, mean incarcerated population increased at a large magnitude, mean corrections spending per capita increased at a great magnitude, and mean spending per inmate decreased at a slight magnitude due to the 1994 law compared to the synthetic control's outcomes. We must keep in mind that the estimates post 1994 include a timeline with 3 more years of observations than the training data set of California and the synthetic control pre-1994. Also, Corrections spending includes expenditures on prisons, probation, parole, and other state correctional programs. 
+
+    Figure 2 shows a dip in corrections spending around 2009, which is when a federal judge panel ordered the state of California to reduce overcrowding in prisons by a substantial amount. Senate Bill 678 "provided financial incentives to counties to lower the number of felony offenders sent to state prison for probation failures" \parencite{PPIC_CriminalJusticeShifts} which likely explains the slight decrease. 
+
+    I did not use the arrest rates as a proxy for crime, as the amount of crime that occurred before and after 1994 is a fickle thing to measure. An arrest does not necessarily the person is guilty of the crime. I also did not look at the composition of arrests or incarcerated by race, as the ICPSR data that I used to measure total incarcerated per state has the limitation of collecting data by race incon across prisons. 
+    
+    The Diff-in-Diff regression estimates in Table 2 show that the total number of people incarcerated in California is significant both pre- and post- treatment in both the control and treatment groups, and the causal effect of the law demonstrated with Treat x Post was statistically significant with a p-value less than 0.001, suggesting a very high level of significance. There were 765 observations. The $R^2$ value for this is 0.708, which means that this regression represents about 70.8\% of the variance in the outcome that is explained by the independent variables.
+    
+    The Arrest Rate per 100,000 people actually decreased in a statistically significant way due to the 1994 law, compared to the scenario where the law was never passed. However, this has a very low $R^2$ value of 0.005251, or about 0.53\%.
+
+    The most intriguing causal finding is that though the number of total people incarcerated increased while the arrest rate slightly decreased, the total corrections spending increased in a statistically significant manner. This has an $R^2$ value of 0.464, or 46.4\%. 
+
+\begin{landscape}
+\begin{center}
+\begin{table}[ht]
+\scriptsize
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lccccccc}
+\toprule
+\textbf{Metric} & \textbf{California Pre-Treat} & \textbf{CA Post-Treat} & \textbf{CA Change} & \textbf{Synthetic Pre-Treat} & \textbf{Synth Post-Treat} & \textbf{Synth Change} & \textbf{DID} \\
+\midrule
+\textbf{N} & 3 & 6 & 9 & 102 & 216 & 318 & 327 \\
+\textbf{Mean Arrest Rate per 100k} & 198 & 190 & -8 & 201 & 212 & 11 & -19$^{**}$ \\
+\textbf{SD Arrest Rate} & 6 & 8 &  & 43 & 54 &  & \\
+\textbf{Mean Incarcerated Pop.} & 90,650 & 117,816 & 27,166 & 5,379 & 5,982 & 603 & 26,563$^{***}$ \\
+\textbf{SD Incarcerated Pop.} & 2,492 & 12,430 &  & 7,373 & 7,624 &  & \\
+\textbf{Mean Corrections Spending (\$M)} & 3,241 & 4,048 & 807 & 261 & 387 & 126 & 681$^{***}$ \\
+\textbf{SD Corrections Spending} & 333 & 390 &  & 387 & 565 &  & \\
+\textbf{Mean Spend per Inmate (\$)} & 35,798 & 34,478 & -1,320 & 69,723 & 71,461 & 1,738 & -3,058$^{*}$ \\
+\textbf{SD Spend per Inmate} & 4,218 & 2,521 &  & 37,303 & 27,301 &  & \\
+\bottomrule
+\end{tabular}
+\caption{Summary Statistics and Differences-in-Differences Estimates: California vs. Synthetic Control (1991–1999)}
+\label{tab:did_summary}
+\textit{Notes}: Difference-in-differences values computed as (Post – Pre) for California minus (Post – Pre) for the Synthetic Control. Stars denote significance: * $p<0.1$, ** $p<0.05$, *** $p<0.01$. All numbers have been rounded to the nearest whole number for readability. Source: Author’s calculations using ICPSR and NASBO data.
+\end{table}
+\end{center}
+\end{landscape}
+
+\begin{table}[ht]
+\normalsize
+\centering
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lccc}
+\toprule
+\multicolumn{4}{c}{\textbf{DID Effect of 1994 Law on Variables}} \\
+\midrule
+\textbf{Variable} & \textbf{Total Incarcerated} & \textbf{Corrections Spending} & \textbf{Arrest Rate / 100k} \\
+\midrule
+Treat & 84722$^{***}$ & 2916.4$^{***}$ & 3.17 \\
+      & (1334.1) & (160.6) & (9.98) \\
+Post  & 2165.2$^{**}$ & 258.7$^{***}$ & 8.77 \\
+      & (751.0) & (42.0) & (5.91) \\
+Treat $\times$ Post & 28800$^{***}$ & 1356.7$^{***}$ & -33.16$^{***}$ \\
+      & (3037.6) & (311.4) & (11.37) \\
+Constant & 5926.3$^{***}$ & 324.7$^{***}$ & 210.98$^{***}$ \\
+         & (626.0) & (32.49) & (3.70) \\
+\midrule
+$R^2$ & 0.708 & 0.464 & 0.005 \\
+$N$ & 765 & 764 & 561 \\
+\bottomrule
+\end{tabular}
+\caption{Difference-in-Differences Regression Estimates of 1994 Law on Key Outcomes (with HC1 Robust Standard Errors)}
+\label{tab:did-robust}
+\textit{Source}: Author’s calculations using ICPSR and NASBO data.
+\end{table}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{corrections.png}
+    \caption{Corrections Spending Over Time}
+    \label{fig:Figure 2}
+    \textit{Source}: Author’s calculations using NASBO State Expenditure Reports data.
+\end{figure}
+
+    The most intriguing thing about Figure 2 is that it visualizes the spending between California and its synthetic control between 1990 to 2025. We see the parallel trends assumption satisfied before 1994, and how California’s total corrections spending skyrockets year after year after the law is passed. Spending began rising exponentially while the amount spent per inmate decreased slightly and Figure 3 shows that the incarcerated population began to increase at a far greater magnitude than the synthetic control estimate. 
+    
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{Incarcerated.png}
+    \caption{Incarcerated Population over Time}
+    \label{fig:Figure 3}
+    \textit{Source}: Author’s calculations using ICPSR National Corrections Reporting Program data.
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.85\linewidth]{TreatIncarcerated.png}
+    \caption{Treatment Effect of the 1994 CA 3 Strikes Law}
+    \label{fig:Figure 4}
+    \textit{Source}: Author’s calculations using ICPSR National Corrections Reporting Program data.
+\end{figure}
+
+    The treatment effect of the 1994 law is shown in Figure 4, and though the difference begins to converge in 1999, the difference is still quite significant. 
+    
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{ArrestsCAvsSynth.png}
+    \caption{Arrests Over Time}
+    \label{fig:Figure 5}
+    \textit{Source}: Author’s calculations using ICPSR Arrests Summarized Yearly data.
+\end{figure}
+
+    Lastly, Figure 5 is very interesting because it shows that the number of total arrests actually went down in California compared to the synthetic control. We see this in the regression too, but it’s interesting that a result pertaining to the arrest rate per 100,000 people decreasing by about 33 people per 100,000 can have wide overall impacts. It may be that there was a deterrence effect on potential repeat offenders, where people understood the risks of being caught and therefore either moved to a different state, stopped producing that type of crime and moved to a different illegal activity, or stopped creating crime altogether. There is the possibility that the law put all potential repeat offenders in prison and was effective. There is also the possibility that the deterrence effect “canceled out” with internal incentives in the police force to arrest more people.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{Placebo.png}
+    \caption{Gap in Arrest Rates Placebo Test}
+    \label{fig:enter-label}
+    \textit{Source}: Author’s calculations using ICPSR and NASBO data.
+\end{figure}
+    In my Diff-in-Diff regressions, I used Heteroskedasticity-robust Standard Errors (HC1) with guidance from the \textcite{uva_robust_errors} and \textcite{stata_robust_errors} in order to prevent specifying the wrong model while getting a statistically significant result. This is to prevent false positives in our result by controlling for the non-constant but consistent effects. 
+
+    Figure 6 is the placebo test to check the robustness of our synthetic control. To remove the poorly fit states from the donor pool, we can set a threshold for pre-intervention error with this equation
+
+\begin{equation*}
+MSE = \frac{1}{N} \sum \left( Y_t - \hat{Y}_t^{\text{Synth}} \right)^2
+\end{equation*}
+
+    And remove those with high error. Removing the noise will help us how extreme of a value is the effect in the state of California and give us a p-value of the results.
+    
+    This placebo p-value test gave us a pseudo-value of 0.98, meaning the estimated effect is not statistically significantly different from the donor states that passed a three strikes law. Though Figure 6 may suggest a visual treatment effect, the pseudo p-value may indicate that the donors were a poor pre-treatment fit. In the future, pre-treatment MPSE thresholds may help filter out poorly fit donor states and check whether the treatment effect is statistically significant.
+
+    In other words, the synthetic control method worked to estiamte California's counterfactual, but didn't generalize well to the donor states. When donor states are poorly matched, their post-treatment MPSEs are difficult to read, which dilutes the statistical power of the test. This points to a limitation of synthetic control robustness checks, where clean counterfactuals are few and far between.
+
+    Overall, my hypothesis was rejected because I expected the arrest rate to simply increase due to the three strikes law because I supposed that it would create a “green light” for police officers to arrest as many people as they could in pursuit of promotions and raises under the guise of preventing future crime. However, the data reveals very little to support this hypothesis. It definitely shows that spending on corrections increased greatly over time and the arrest rate was higher than what it would've been had the law not been passed. This law seems to have been the first step in the billions of dollars being spent on corrections under the banner of ``Tough on Crime." I hope to see future research build upon the work behind synthetic controls, and analyze the pattern behind the convergence of the incarcerated population over time between synthetic and "real" California around 1999. It would also be great to see why Corrections spending increased sizably while the cost per inmate decreased over time. Was there a social cost to the three strikes law? Did it net an overall negative or positive externality for the members of society?
+
+    I hope that future work will expand upon the post-treatment period for all outcomes and also expand on how the incentives of low-paying prison labor may have been a factor that affected incarceration rates throughout the 1900s to the present day. I hope to see whether it was a rational decision for Californians to strike down the state ballot measure to end prison labor in 2024, and what the economic outcomes would have been had the law been passed. Would prices in labor markets gone up? 
+    
+\section{Conclusion}
+    We’ve seen that spending on Corrections have increased and the number of people incarcerated greatly increased while arrest rates slightly decreased due to the 1994 law. However, the amount spent on Corrections was far greater, the number of people incarcerated was way higher, and the total number of arrests was substantial compared to the synthetic control outcome. We cannot truly state whether all of this was due to the 3 strikes law alone, but the law clearly contributed to these outcomes. This is because we were able to do a difference-in-difference analysis on the outcomes versus a Synthetic Control created by the weights of different states with and without 3 strikes laws in the United States around that time period. However, it cannot be concluded whether crime actually decreased as a result of this law as too complicated to measure by arrests alone. 
+
+\medskip
+
+\printbibliography
+\end{document}
