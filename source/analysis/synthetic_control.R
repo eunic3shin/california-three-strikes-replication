@@ -62,7 +62,60 @@ gaps <- lapply(ids,function(id) tryCatch({
 gaps <- Filter(Negate(is.null),gaps)
 if (!length(gaps)) stop("No successful placebo fits")
 g <- do.call(cbind,gaps); treated <- base$actual-base$synthetic
-png(file.path(out,"Placebo.png"),width=1800,height=1200,res=200)
+png(file.path(out,"spending_placebo.png"),width=1800,height=1200,res=200)
 matplot(1991:2000,g,type="l",lty=1,col="grey",ylim=range(c(g,treated)),xlab="Year",ylab="Gap in corrections spending")
 lines(1991:2000,treated,col="red",lwd=2); abline(v=1994,lty=2); dev.off()
 write.csv(data.frame(year=1991:2000,california=treated,g),file.path(out,"placebo_gaps.csv"),row.names=FALSE)
+
+# Manuscript Figure: arrest-rate gaps, from the original CA_vs_Synth notebook.
+arrest_gaps <- lapply(donors,function(id) tryCatch({
+  f <- fit(df,id,setdiff(donors,id),"Arrest.Rate.per.100.000",
+           c("Corrections.Normalized","Incarcerated.Normalized"),years)
+  f$actual-f$synthetic
+},error=function(e) {message("Arrest placebo failed: ",id,": ",conditionMessage(e)); NULL}))
+arrest_gaps <- Filter(Negate(is.null),arrest_gaps)
+if (!length(arrest_gaps)) stop("No successful arrest placebo fits")
+ag <- do.call(cbind,arrest_gaps); ca_gap <- a$actual-a$synthetic
+png(file.path(out,"Placebo.png"),width=1800,height=1200,res=200)
+matplot(years,ag,type="l",lty=1,col="grey",ylim=c(-100,100),
+        xlab="Year",ylab="Gap in arrest rate")
+lines(years,ca_gap,col="red",lwd=2); abline(v=1994,lty=2); dev.off()
+write.csv(data.frame(year=years,california=ca_gap,ag),file.path(out,"arrest_placebo_gaps.csv"),row.names=FALSE)
+
+# Table 1: final historical notebook used complete pre-period donors for the summary.
+# Do not assign magnitude-based stars or claim a significance test.
+pred <- c("Corrections.Normalized","Incarcerated.Normalized")
+valid_donors <- sort(unique(df$state_id[df$State!="California"]))
+valid_donors <- valid_donors[vapply(valid_donors,function(id) {
+  x <- df[df$state_id==id & df$Year %in% 1991:1993,pred,drop=FALSE]
+  nrow(x)==3 && all(complete.cases(x))
+},logical(1))]
+summary_fit <- fit(df,ca,valid_donors,"Arrest.Rate.per.100.000",pred,years)
+weights <- setNames(summary_fit$weights,valid_donors)
+df$weight <- unname(weights[as.character(df$state_id)])
+df$weight[is.na(df$weight)] <- 0
+df$spend_per_inmate <- ifelse(df$Total.People.Incarcerated>0,
+   1e6*df$Total.Corrections.Spending/df$Total.People.Incarcerated,NA_real_)
+metrics <- c("Arrest.Rate.per.100.000","total_arrests","Corrections.Normalized",
+             "Total.Corrections.Spending","Total.People.Incarcerated","spend_per_inmate")
+results <- do.call(rbind,lapply(c("California","Synthetic California"),function(group) {
+  do.call(rbind,lapply(c("Pre","Post"),function(period) {
+    d <- df[(df$Year>=1994)==(period=="Post"),]
+    d <- if(group=="California") d[d$State=="California",] else
+      d[d$State!="California" & d$Total.People.Incarcerated>0 & d$Total.Corrections.Spending>0,]
+    do.call(rbind,lapply(metrics,function(metric) {
+      x <- d[[metric]]; w <- d$weight
+      m <- if(group=="California") mean(x,na.rm=TRUE) else weighted.mean(x,w,na.rm=TRUE)
+      sd <- if(group=="California") stats::sd(x,na.rm=TRUE) else sqrt(weighted.mean((x-m)^2,w,na.rm=TRUE))
+      data.frame(group=group,period=period,metric=metric,mean=m,sd=sd,n=nrow(d))
+    }))
+  }))
+}))
+write.csv(results,file.path(out,"table1_summary.csv"),row.names=FALSE)
+did <- do.call(rbind,lapply(metrics,function(metric) {
+  v <- results[results$metric==metric,]
+  ca_change <- v$mean[v$group=="California" & v$period=="Post"]-v$mean[v$group=="California" & v$period=="Pre"]
+  synth_change <- v$mean[v$group=="Synthetic California" & v$period=="Post"]-v$mean[v$group=="Synthetic California" & v$period=="Pre"]
+  data.frame(metric=metric,ca_change=ca_change,synth_change=synth_change,did=ca_change-synth_change)
+}))
+write.csv(did,file.path(out,"table1_differences.csv"),row.names=FALSE)

@@ -88,7 +88,7 @@ if "prepare-data" in COMMAND_LINE_TARGETS:
 
 # Recovered redraws are separate from the published manuscript images.
 synthetic = env.Command(
-    ["output/figures/redrawn/"+name for name in ("ArrestsCAvsSynth.png","corrections.png","TotalCorrSpend.png","Placebo.png","arrests_synthetic.csv","spending_synthetic.csv","placebo_gaps.csv")],
+    ["output/figures/redrawn/"+name for name in ("ArrestsCAvsSynth.png","corrections.png","TotalCorrSpend.png","Placebo.png","arrests_synthetic.csv","spending_synthetic.csv","placebo_gaps.csv","spending_placebo.png","arrest_placebo_gaps.csv","table1_summary.csv","table1_differences.csv")],
     ["source/analysis/synthetic_control.R",panel,"data/raw/State-Exp-Report-Data.xlsm"],
     '"$RSCRIPT" --vanilla "${SOURCES[0]}" "${SOURCES[1]}" "${SOURCES[2]}" "${TARGETS[0].dir}"',RSCRIPT=rscript)
 inc_redraw = env.Command(
