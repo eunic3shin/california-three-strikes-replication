@@ -34,7 +34,7 @@ def main():
                    "Total People Incarcerated"]:
         data[column] = 0
     output.parent.mkdir(parents=True, exist_ok=True)
-    data.sort_values(["State", "Year"]).to_excel(output, index=False)
+    data.drop(columns="POP").sort_values(["State", "Year"]).to_excel(output, index=False)
 
 
 if __name__ == "__main__":

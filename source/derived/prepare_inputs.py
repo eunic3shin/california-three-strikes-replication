@@ -42,7 +42,7 @@ def incarceration(raw):
     # Historical Jail_Pop notebook counts records, not unique persons.
     df = pd.read_stata(raw / "38048-0003-Data.dta")
     df["STATE"] = df["STATE"].str.strip()
-    df = df[df["RPTYEAR"].between(1991, 2005)]
+    df = df[df["RPTYEAR"].between(1991, 2019)]
     return (df.groupby(["STATE", "RPTYEAR"], observed=True).size()
             .reset_index(name="Total People Incarcerated")
             .rename(columns={"RPTYEAR": "Year"}))

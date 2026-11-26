@@ -81,4 +81,18 @@ if "prepare-data" in COMMAND_LINE_TARGETS:
          "data/raw/38048-0003-Data.dta", "data/raw/State-Exp-Report-Data.xlsm"],
         '"$PYTHON" "${SOURCES[0]}" data/raw data',
     )
-    Alias("prepare-data", prep)
+    scaffold = env.Command("data/States_3_Strikes.xlsx",
+        ["source/derived/policy_scaffold.py", "data/arrest_rates.csv", "uv.lock"],
+        '"$PYTHON" "${SOURCES[0]}" "${SOURCES[1]}" "$TARGET"')
+    Alias("prepare-data", [prep, scaffold])
+
+# Recovered redraws are separate from the published manuscript images.
+synthetic = env.Command(
+    ["output/figures/redrawn/"+name for name in ("ArrestsCAvsSynth.png","corrections.png","TotalCorrSpend.png","Placebo.png","arrests_synthetic.csv","spending_synthetic.csv","placebo_gaps.csv")],
+    ["source/analysis/synthetic_control.R",panel,"data/raw/State-Exp-Report-Data.xlsm"],
+    '"$RSCRIPT" --vanilla "${SOURCES[0]}" "${SOURCES[1]}" "${SOURCES[2]}" "${TARGETS[0].dir}"',RSCRIPT=rscript)
+inc_redraw = env.Command(
+    ["output/figures/redrawn/"+name for name in ("Incarcerated.png","TreatIncarcerated.png","incarceration_synthetic.csv")],
+    ["source/analysis/incarceration_synthetic.R","data/incarceration_counts.csv"],
+    '"$RSCRIPT" --vanilla "${SOURCES[0]}" "${SOURCES[1]}" "${TARGETS[0].dir}"',RSCRIPT=rscript)
+Alias("redraw-figures",[synthetic,inc_redraw])
