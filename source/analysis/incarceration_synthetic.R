@@ -5,6 +5,9 @@ args <- commandArgs(trailingOnly=TRUE)
 stopifnot(length(args)==2)
 d <- read.csv(args[1]); out <- args[2]; dir.create(out,recursive=TRUE,showWarnings=FALSE)
 d <- d[d$Year %in% 1991:2005,]
+# The historical notebook pivoted observed record counts and dropped incomplete states.
+# The balanced DID input encodes absent records as zero; restore missingness here.
+d$Total.People.Incarcerated[d$Total.People.Incarcerated == 0] <- NA_real_
 wide <- reshape(d,idvar="Year",timevar="STATE",direction="wide")
 wide <- wide[order(wide$Year),]
 names(wide) <- sub("^Total.People.Incarcerated\\.","",names(wide))
