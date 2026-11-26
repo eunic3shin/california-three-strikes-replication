@@ -1,0 +1,7 @@
+data/
+output/
+.venv/
+.sconsign.dblite
+__pycache__/
+*.py[cod]
+.DS_Store

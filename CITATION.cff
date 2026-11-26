@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use these research materials, please cite the associated manuscript and identify the archive version used."
+title: "Pointing to the Price of Punishment: California's Three Strikes Law on Incarceration Outcomes: Research replication archive"
+type: software
+authors:
+  - family-names: Shin
+    given-names: Eunice
+    orcid: "https://orcid.org/0009-0002-9756-1578"
+repository-code: "https://github.com/eunic3shin/california-three-strikes-replication"
+preferred-citation:
+  type: unpublished
+  title: "Pointing to the Price of Punishment: California's Three Strikes Law on Incarceration Outcomes"
+  authors:
+    - family-names: Shin
+      given-names: Eunice
+      orcid: "https://orcid.org/0009-0002-9756-1578"
+  doi: "10.5281/zenodo.24553443"
+  url: "https://doi.org/10.5281/zenodo.24553443"
