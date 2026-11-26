@@ -43,7 +43,14 @@ def incarceration(raw):
     df = pd.read_stata(raw / "38048-0003-Data.dta")
     df["STATE"] = df["STATE"].str.strip()
     df = df[df["RPTYEAR"].between(1991, 2019)]
-    return (df.groupby(["STATE", "RPTYEAR"], observed=True).size()
+    # Explicitly reproduce the historical balanced state-year count panel.
+    # Zero means no records in this extract, not confirmed zero incarceration.
+    counts = df.groupby(["STATE", "RPTYEAR"], observed=True).size()
+    index = pd.MultiIndex.from_product(
+        [sorted(df["STATE"].dropna().unique()), range(1991, 2020)],
+        names=["STATE", "RPTYEAR"],
+    )
+    return (counts.reindex(index, fill_value=0)
             .reset_index(name="Total People Incarcerated")
             .rename(columns={"RPTYEAR": "Year"}))
 
