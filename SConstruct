@@ -53,7 +53,7 @@ paper = env.Command(
 Default(paper, panel)
 
 manuscript_figures = [
-    f"data/published-figures/{name}.png"
+    f"{'output/figures/redrawn' if ARGUMENTS.get('FIGURES') == 'redrawn' else 'data/published-figures'}/{name}.png"
     for name in (
         "TotalCorrSpend", "corrections", "Incarcerated",
         "TreatIncarcerated", "ArrestsCAvsSynth", "Placebo",

@@ -35,7 +35,7 @@ uv run --locked scons
 uv run --locked scons output/california_1994_law_diagnostic.pdf
 ```
 
-The default build generates Table 2 and the merged state-year panel. To compile the manuscript, separately obtain the six original PNGs listed in [archive correspondence](docs/archive-correspondence.md), install LaTeX, latexmk, Biber and biblatex-chicago, and run `uv run --locked scons manuscript`. The paper DOI provides a visual reference, not necessarily the original image files. Synthetic-control re-estimation is not implemented in the current pipeline.
+The default build generates Table 2 and the merged state-year panel. To compile the manuscript, separately obtain the six original PNGs listed in [archive correspondence](docs/archive-correspondence.md), install LaTeX, latexmk, Biber and biblatex-chicago, and run `uv run --locked scons manuscript`. The paper DOI provides a visual reference, not necessarily the original image files. Synthetic-control re-estimation is now available through the separate redraw target below.
 
 See [replication notes](docs/replication-notes.md) for known numerical differences. No third-party data are bundled. The local data directory is gitignored.
 
@@ -65,6 +65,19 @@ uv run --locked scons prepare-data
 uv run --locked scons
 ```
 
-The second command also requires the separately prepared data/States_3_Strikes.xlsx scaffold. The three Table 2 regressions alone can be run via `uv run --locked scons output/california_1994_law.pdf`.
+The preparation target now reconstructs data/States_3_Strikes.xlsx from the historical policy coding and prepared UCR data. The three Table 2 regressions alone can be run via `uv run --locked scons output/california_1994_law.pdf`.
 
 The [preprocessing script](source/derived/prepare_inputs.py) retains the historical annual row trims, missing-age-count handling, summed POP across offense rows, NCRP record counts, and NASBO CORR_TOT extraction. In particular, the archived POP denominator is not a unique state population, and NCRP record counts need not equal unique persons. These choices are preserved for transparency rather than endorsed as corrected measures. The exact reconstructed intermediate values have not been validated against the archived files.
+
+## Complete reconstructed workflow
+
+Install R packages Synth, readxl and nnls in addition to the base R runtime. The policy scaffold is generated from the archived 50-state, 1991–1999 coding and the UCR state-year keys. These are historical author-coded flags, not independently verified legal enactment dates. All 450 archived policy flags and pre/post indicators match the reconstructed rule, and all 450 population values match the archived UCR aggregate denominator. The raw files have not been reprocessed for numerical validation.
+
+```sh
+uv run --locked scons prepare-data
+uv run --locked scons
+uv run --locked scons redraw-figures
+uv run --locked scons manuscript FIGURES=redrawn
+```
+
+The last command uses regenerated PNGs rather than archived publication figures. The synthetic-control redraw retains the historical donor selection (including states with any zero policy indicator), and the incarceration redraw uses nonnegative least squares without an intercept, rather than imposing a sum-to-one constraint. Historical missing outcome zeros are used in the synthetic-control figure script. These choices are retained for replication, not presented as improved identification. Table 1 remains the printed manuscript table; its exact synthetic summary and published figure values have not been verified.
