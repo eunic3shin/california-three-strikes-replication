@@ -27,3 +27,7 @@ The manuscript uses archived publication figures; synthetic-control re-estimatio
 ## Starting from raw provider downloads
 
 See the [complete acquisition and preparation workflow](DATA_AVAILABILITY.md). The reconstructed pipeline is not yet verified against the archived numerical outputs. To compile with newly drawn figures rather than separately obtained publication PNGs, use `uv run --locked scons manuscript FIGURES=redrawn` after completing preparation and figure redraws.
+
+## Validation status (2026-11-27)
+
+Local macOS execution verified: raw preprocessing, all three original DID regression outputs, Table 1 rounded summary statistics, figure redraws and 22-page manuscript compilation. See replication notes for rounding, missing-record coding, magnitude-based stars, placebo failures and incomplete figure equivalence.

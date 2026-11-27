@@ -91,3 +91,7 @@ uv run --locked python source/verify_inputs.py data /path/to/archive/data arrest
 ```
 
 The checker compares schemas, row counts, duplicate-preserving sorted rows and numeric values within a stated tolerance. It fails on discrepancies or missing files. Sorting by all columns may make near-tied numeric rows compare out of order; inspect such failures individually. No archived input data are included or requested by this checker. This comparison is not a substitute for validating the final regression estimates or figure outputs.
+
+## Local validation update (2026-11-27)
+
+Local macOS execution verified: raw preprocessing, all three original DID regression outputs, Table 1 rounded summary statistics, figure redraws and 22-page manuscript compilation. See replication notes for rounding, missing-record coding, magnitude-based stars, placebo failures and incomplete figure equivalence. Earlier references to pending execution in this guide describe the initial reconstruction stage; exact intermediate and figure equivalence beyond the documented comparisons is not established.
