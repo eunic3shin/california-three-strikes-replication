@@ -1,7 +1,11 @@
 cff-version: 1.2.0
-message: "If you use these research materials, please cite the associated manuscript and identify the archive version used."
+message: "Please cite the archived software version used and the associated manuscript when using these research materials."
 title: "Pointing to the Price of Punishment: California's Three Strikes Law on Incarceration Outcomes: Research replication archive"
 type: software
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.24588356"
+    description: "Archived software release v1.0.0 (not the current main branch)."
 authors:
   - family-names: Shin
     given-names: Eunice
